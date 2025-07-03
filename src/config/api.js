@@ -9,3 +9,4 @@ const API_CONFIG = {
 };
 
 export default API_CONFIG;
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
