@@ -1,0 +1,11 @@
+{
+  "name": "personal-finance-tracker-backend",
+  "description": "PHP Backend API for Personal Finance Tracker",
+  "version": "1.0.0",
+  "engines": {
+    "php": "8.1.x"
+  },
+  "scripts": {
+    "start": "php -S 0.0.0.0:$PORT -t finance-backend"
+  }
+}

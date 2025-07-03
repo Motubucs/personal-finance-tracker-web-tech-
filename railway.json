@@ -1,0 +1,7 @@
+{
+  "deploy": {
+    "healthcheckPath": "/health.php",
+    "startCommand": "cd finance-backend && php -S 0.0.0.0:$PORT -t .",
+    "buildCommand": "echo 'No build needed for PHP'"
+  }
+}

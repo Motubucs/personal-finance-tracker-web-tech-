@@ -1,0 +1,8 @@
+[build]
+  builder = "heroku/buildpacks:20"
+
+[deploy]
+  startCommand = "vendor/bin/heroku-php-apache2"
+
+[[services]]
+  httpPort = 8080

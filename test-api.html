@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Finance Tracker API Test</h1>
+    <button onclick="testHealth()">Test Health</button>
+    <button onclick="testGet()">Test GET Transactions</button>
+    <button onclick="testPost()">Test POST Transaction</button>
+    <button onclick="testDelete()">Test DELETE All</button>
+    
+    <div id="results" style="margin-top: 20px; padding: 20px; background: #f0f0f0; white-space: pre-wrap;"></div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function log(message) {
+            console.log(message);
+            resultsDiv.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+        }
+
+        async function testHealth() {
+            try {
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/health.php');
+                const data = await response.text();
+                log('Health Check: ' + data);
+            } catch (error) {
+                log('Health Check Error: ' + error.message);
+            }
+        }
+
+        async function testGet() {
+            try {
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                const data = await response.json();
+                log('GET Response: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('GET Error: ' + error.message);
+            }
+        }
+
+        async function testPost() {
+            try {
+                const testTransaction = {
+                    amount: 100.50,
+                    type: 'income',
+                    category: 'Test',
+                    description: 'API Test Transaction',
+                    date: new Date().toISOString().split('T')[0]
+                };
+
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/post.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testTransaction)
+                });
+
+                const data = await response.json();
+                log('POST Response: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('POST Error: ' + error.message);
+            }
+        }
+
+        async function testDelete() {
+            try {
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/delete_all.php', {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                log('DELETE Response: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('DELETE Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

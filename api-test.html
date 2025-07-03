@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Testing Finance Tracker API</h1>
+    <button onclick="testAddTransaction()">Test Add Transaction</button>
+    <button onclick="testGetTransactions()">Test Get Transactions</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAddTransaction() {
+            const data = {
+                type: 'expense',
+                amount: 25.50,
+                category: 'Test Category',
+                note: 'Test transaction from API test',
+                date: '2025-06-26'
+            };
+
+            try {
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/post.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.text();
+                document.getElementById('result').innerHTML = '<h3>Add Transaction Response:</h3><pre>' + result + '</pre>';
+                console.log('Response:', result);
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<h3>Error:</h3><pre>' + error.message + '</pre>';
+                console.error('Error:', error);
+            }
+        }
+
+        async function testGetTransactions() {
+            try {
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                const result = await response.text();
+                document.getElementById('result').innerHTML = '<h3>Get Transactions Response:</h3><pre>' + result + '</pre>';
+                console.log('Response:', result);
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<h3>Error:</h3><pre>' + error.message + '</pre>';
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

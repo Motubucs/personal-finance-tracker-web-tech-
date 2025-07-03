@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GET Test</title>
+</head>
+<body>
+    <h1>GET Transactions Test</h1>
+    <button onclick="testGet()">Test GET API</button>
+    <pre id="output" style="background: #f0f0f0; padding: 20px; margin: 20px 0;"></pre>
+
+    <script>
+        async function testGet() {
+            const output = document.getElementById('output');
+            output.textContent = 'Loading...\n';
+            
+            try {
+                console.log('Fetching from:', 'http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                
+                const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                
+                output.textContent += 'Response Status: ' + response.status + '\n';
+                output.textContent += 'Response Headers: ' + JSON.stringify([...response.headers], null, 2) + '\n\n';
+                
+                const text = await response.text();
+                output.textContent += 'Raw Response Text:\n' + text + '\n\n';
+                
+                try {
+                    const data = JSON.parse(text);
+                    output.textContent += 'Parsed JSON:\n' + JSON.stringify(data, null, 2);
+                } catch (e) {
+                    output.textContent += 'JSON Parse Error: ' + e.message;
+                }
+                
+            } catch (error) {
+                output.textContent += 'Fetch Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

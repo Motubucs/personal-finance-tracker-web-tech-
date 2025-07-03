@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Create Transaction</title>
+</head>
+<body>
+    <h2>Test Create Transaction</h2>
+    <form id="createForm">
+        <label>Type:</label>
+        <select name="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select><br><br>
+        
+        <label>Amount:</label>
+        <input type="number" name="amount" step="0.01" required><br><br>
+        
+        <label>Category:</label>
+        <input type="text" name="category" required><br><br>
+        
+        <label>Note:</label>
+        <input type="text" name="note"><br><br>
+        
+        <label>Date:</label>
+        <input type="date" name="date" required><br><br>
+        
+        <button type="submit">Create Transaction</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('createForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                type: formData.get('type'),
+                amount: parseFloat(formData.get('amount')),
+                category: formData.get('category'),
+                note: formData.get('note'),
+                date: formData.get('date')
+            };
+            
+            try {
+                const response = await fetch('api/transactions/create.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

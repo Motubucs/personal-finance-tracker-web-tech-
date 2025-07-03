@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .status {
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .info {
+            background: #cce7ff;
+            color: #004085;
+            border: 2px solid #b3d9ff;
+        }
+        
+        .features {
+            text-align: left;
+            margin: 2rem 0;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .features li {
+            padding: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .team {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .btn {
+            background: #42b983;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #36966e;
+            transform: translateY(-2px);
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .tech-item {
+            background: #f1f3f4;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">💰</div>
+        <h1>Personal Finance Tracker</h1>
+        <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+            UTM Web Technology Course Project
+        </p>
+        
+        <div class="status success">
+            ✅ Frontend Successfully Deployed to Netlify!
+        </div>
+        
+        <div class="status info">
+            🔧 Full Vue.js Application Ready for Integration
+        </div>
+        
+        <div class="features">
+            <h3>🎨 Project Features:</h3>
+            <ul>
+                <li>💰 <strong>Dashboard Analytics</strong> - Real-time income, expenses, balance tracking</li>
+                <li>📊 <strong>Data Visualization</strong> - Interactive charts with Chart.js</li>
+                <li>📱 <strong>Responsive Design</strong> - Mobile-friendly interface</li>
+                <li>🔄 <strong>CRUD Operations</strong> - Complete transaction management</li>
+                <li>🚀 <strong>Modern Tech Stack</strong> - Vue.js 3 + PHP 8 + MySQL</li>
+            </ul>
+        </div>
+        
+        <div class="tech-stack">
+            <div class="tech-item">
+                <h4>Frontend</h4>
+                <p>Vue.js 3<br>Vue Router<br>Chart.js<br>SCSS</p>
+            </div>
+            <div class="tech-item">
+                <h4>Backend</h4>
+                <p>PHP 8+<br>MySQL 8<br>RESTful API<br>PDO</p>
+            </div>
+            <div class="tech-item">
+                <h4>Deployment</h4>
+                <p>Netlify<br>Railway<br>HTTPS<br>CDN</p>
+            </div>
+        </div>
+        
+        <div class="team">
+            <h3>👥 Team Members</h3>
+            <p><strong>Moath Mohamed Morsy</strong> - Team Leader<br>
+            <strong>Mohammed Salghi</strong> - Backend Developer<br>
+            <strong>Zuhayer Abdulla</strong> - Frontend Developer<br>
+            <strong>Yusuf Zain</strong> - UI/UX Developer<br>
+            <strong>Mustafa Qazi</strong> - Frontend Developer</p>
+        </div>
+        
+        <div style="margin: 2rem 0;">
+            <a href="#" class="btn" onclick="showVueApp()">🚀 Launch Vue.js App</a>
+            <a href="#" class="btn" onclick="showTechDetails()">🔧 Technical Details</a>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Course:</strong> SECJ3483-03 Web Technology<br>
+            <strong>University:</strong> Universiti Teknologi Malaysia<br>
+            <strong>Due Date:</strong> July 2, 2025</p>
+        </div>
+    </div>
+
+    <script>
+        function showVueApp() {
+            alert('🚀 Vue.js Application Ready!\n\n✅ Frontend deployed successfully\n⏳ Backend integration in progress\n\nFull CRUD functionality will be available once backend is connected to Railway.');
+        }
+        
+        function showTechDetails() {
+            alert('🔧 Technical Implementation:\n\n• Vue.js 3 with Composition API\n• Vue Router for SPA navigation\n• Chart.js for data visualization\n• PHP 8+ RESTful API\n• MySQL 8 database\n• Responsive SCSS styling\n• Production-ready deployment');
+        }
+        
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.8s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

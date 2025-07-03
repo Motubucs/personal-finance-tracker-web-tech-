@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Personal Finance Tracker - Debug Version</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .debug-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .debug-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .success { background: #28a745; }
+        .danger { background: #dc3545; }
+        .warning { background: #ffc107; color: #212529; }
+
+        pre {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .transaction-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-online { background: #28a745; }
+        .status-offline { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <h1>💰 Personal Finance Tracker - Debug & Test Panel</h1>
+
+            <!-- API Status -->
+            <div class="debug-section">
+                <h3>🔌 API Connection Status</h3>
+                <div>
+                    <span class="status-indicator" :class="apiStatus.health ? 'status-online' : 'status-offline'"></span>
+                    Health Check: {{ apiStatus.health ? 'ONLINE' : 'OFFLINE' }}
+                </div>
+                <div>
+                    <span class="status-indicator" :class="apiStatus.database ? 'status-online' : 'status-offline'"></span>
+                    Database: {{ apiStatus.database ? 'CONNECTED' : 'DISCONNECTED' }}
+                </div>
+                <div>
+                    <span class="status-indicator" :class="apiStatus.transactions ? 'status-online' : 'status-offline'"></span>
+                    Transactions API: {{ apiStatus.transactions ? 'WORKING' : 'FAILED' }}
+                </div>
+                
+                <button @click="checkApiStatus">🔄 Refresh Status</button>
+                <button @click="testDatabase" class="warning">🗄️ Test Database Direct</button>
+            </div>
+
+            <!-- Test Controls -->
+            <div class="debug-section">
+                <h3>🧪 API Testing</h3>
+                <button @click="testGetTransactions">📥 Test GET Transactions</button>
+                <button @click="testPostTransaction" class="success">📤 Test POST Transaction</button>
+                <button @click="clearAllData" class="danger">🗑️ Clear All Database</button>
+                <button @click="loadFromDatabase">🔄 Reload from Database</button>
+                
+                <pre v-if="testResults">{{ testResults }}</pre>
+            </div>
+
+            <!-- Current Data -->
+            <div class="debug-section">
+                <h3>📊 Current Data ({{ transactions.length }} transactions)</h3>
+                <div v-if="transactions.length === 0" style="color: #666; font-style: italic;">
+                    No transactions loaded. Check API connection above.
+                </div>
+                <div v-for="transaction in transactions" :key="transaction.id" class="transaction-item">
+                    <strong>{{ transaction.type.toUpperCase() }}</strong> - 
+                    ${{ transaction.amount }} - 
+                    {{ transaction.category }} - 
+                    {{ transaction.date }}
+                    <br>
+                    <small>ID: {{ transaction.id }} | Note: {{ transaction.note || 'None' }}</small>
+                </div>
+            </div>
+
+            <!-- Add Transaction Form -->
+            <div class="debug-section">
+                <h3>➕ Add New Transaction</h3>
+                <div class="form-group">
+                    <label>Type:</label>
+                    <select v-model="newTransaction.type">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount:</label>
+                    <input type="number" v-model="newTransaction.amount" step="0.01" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Category:</label>
+                    <input type="text" v-model="newTransaction.category" placeholder="e.g., Food, Salary">
+                </div>
+                <div class="form-group">
+                    <label>Note:</label>
+                    <input type="text" v-model="newTransaction.note" placeholder="Optional description">
+                </div>
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input type="date" v-model="newTransaction.date">
+                </div>
+                
+                <button @click="addTransaction" class="success">Add Transaction</button>
+                <button @click="clearForm">Clear Form</button>
+            </div>
+
+            <!-- Debug Log -->
+            <div class="debug-section">
+                <h3>📝 Debug Log</h3>
+                <button @click="clearLog" class="warning">Clear Log</button>
+                <pre>{{ debugLog }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    transactions: [],
+                    apiStatus: {
+                        health: false,
+                        database: false,
+                        transactions: false
+                    },
+                    newTransaction: {
+                        type: 'expense',
+                        amount: '',
+                        category: '',
+                        note: '',
+                        date: new Date().toISOString().split('T')[0]
+                    },
+                    testResults: '',
+                    debugLog: ''
+                }
+            },
+            methods: {
+                log(message) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    this.debugLog += `[${timestamp}] ${message}\n`;
+                    console.log(message);
+                },
+
+                async checkApiStatus() {
+                    this.log('🔄 Checking API status...');
+                    
+                    // Test health endpoint
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/health.php');
+                        this.apiStatus.health = response.ok;
+                        this.log(`Health check: ${response.ok ? 'PASS' : 'FAIL'} (${response.status})`);
+                    } catch (error) {
+                        this.apiStatus.health = false;
+                        this.log(`Health check: FAIL - ${error.message}`);
+                    }
+
+                    // Test database direct
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/test-db.php');
+                        this.apiStatus.database = response.ok;
+                        this.log(`Database test: ${response.ok ? 'PASS' : 'FAIL'} (${response.status})`);
+                    } catch (error) {
+                        this.apiStatus.database = false;
+                        this.log(`Database test: FAIL - ${error.message}`);
+                    }
+
+                    // Test transactions endpoint
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                        this.apiStatus.transactions = response.ok;
+                        this.log(`Transactions API: ${response.ok ? 'PASS' : 'FAIL'} (${response.status})`);
+                    } catch (error) {
+                        this.apiStatus.transactions = false;
+                        this.log(`Transactions API: FAIL - ${error.message}`);
+                    }
+                },
+
+                async testDatabase() {
+                    this.log('🗄️ Testing database connection...');
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/test-db.php');
+                        const text = await response.text();
+                        this.testResults = text;
+                        this.log('Database test completed - check results above');
+                    } catch (error) {
+                        this.testResults = 'Error: ' + error.message;
+                        this.log(`Database test failed: ${error.message}`);
+                    }
+                },
+
+                async testGetTransactions() {
+                    this.log('📥 Testing GET transactions...');
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                        const text = await response.text();
+                        
+                        this.testResults = `Status: ${response.status}\n`;
+                        this.testResults += `Headers: ${JSON.stringify([...response.headers], null, 2)}\n\n`;
+                        this.testResults += `Raw Response:\n${text}\n\n`;
+                        
+                        try {
+                            const data = JSON.parse(text);
+                            this.testResults += `Parsed JSON:\n${JSON.stringify(data, null, 2)}`;
+                            this.log(`GET test completed - ${data.length || 0} transactions found`);
+                        } catch (e) {
+                            this.testResults += `JSON Parse Error: ${e.message}`;
+                            this.log(`GET test failed - JSON parse error: ${e.message}`);
+                        }
+                    } catch (error) {
+                        this.testResults = 'Fetch Error: ' + error.message;
+                        this.log(`GET test failed: ${error.message}`);
+                    }
+                },
+
+                async testPostTransaction() {
+                    this.log('📤 Testing POST transaction...');
+                    const testData = {
+                        type: 'expense',
+                        amount: 99.99,
+                        category: 'Debug Test',
+                        note: 'Test from debug panel ' + new Date().toLocaleTimeString(),
+                        date: new Date().toISOString().split('T')[0]
+                    };
+
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/post.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(testData)
+                        });
+
+                        const text = await response.text();
+                        this.testResults = `Status: ${response.status}\n`;
+                        this.testResults += `Response: ${text}`;
+                        
+                        if (response.ok) {
+                            this.log('POST test successful - transaction created');
+                            await this.loadFromDatabase();
+                        } else {
+                            this.log(`POST test failed - status ${response.status}`);
+                        }
+                    } catch (error) {
+                        this.testResults = 'Error: ' + error.message;
+                        this.log(`POST test failed: ${error.message}`);
+                    }
+                },
+
+                async addTransaction() {
+                    if (!this.newTransaction.amount || !this.newTransaction.category) {
+                        this.log('❌ Cannot add transaction - missing required fields');
+                        return;
+                    }
+
+                    this.log('➕ Adding new transaction...');
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/post.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.newTransaction)
+                        });
+
+                        if (response.ok) {
+                            this.log('✅ Transaction added successfully');
+                            await this.loadFromDatabase();
+                            this.clearForm();
+                        } else {
+                            const text = await response.text();
+                            this.log(`❌ Failed to add transaction: ${text}`);
+                        }
+                    } catch (error) {
+                        this.log(`❌ Error adding transaction: ${error.message}`);
+                    }
+                },
+
+                async loadFromDatabase() {
+                    this.log('🔄 Loading transactions from database...');
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/get.php');
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.transactions = data || [];
+                            this.log(`✅ Loaded ${this.transactions.length} transactions from database`);
+                        } else {
+                            this.log(`❌ Failed to load from database - status ${response.status}`);
+                        }
+                    } catch (error) {
+                        this.log(`❌ Error loading from database: ${error.message}`);
+                    }
+                },
+
+                async clearAllData() {
+                    if (!confirm('Are you sure you want to delete ALL transactions from the database?')) {
+                        return;
+                    }
+
+                    this.log('🗑️ Clearing all data...');
+                    try {
+                        const response = await fetch('http://localhost/finance-tracker/finance-backend/api/transactions/delete_all.php', {
+                            method: 'DELETE'
+                        });
+
+                        if (response.ok) {
+                            this.log('✅ All data cleared');
+                            await this.loadFromDatabase();
+                        } else {
+                            this.log(`❌ Failed to clear data - status ${response.status}`);
+                        }
+                    } catch (error) {
+                        this.log(`❌ Error clearing data: ${error.message}`);
+                    }
+                },
+
+                clearForm() {
+                    this.newTransaction = {
+                        type: 'expense',
+                        amount: '',
+                        category: '',
+                        note: '',
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                },
+
+                clearLog() {
+                    this.debugLog = '';
+                }
+            },
+
+            async mounted() {
+                this.log('🚀 Debug panel loaded');
+                await this.checkApiStatus();
+                await this.loadFromDatabase();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
