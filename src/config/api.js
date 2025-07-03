@@ -8,4 +8,8 @@ const API_CONFIG = {
   }
 };
 
+// For Vue 3 (Vite)
 export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost/finance-tracker/finance-backend";
+
+// For Vue 2 (Vue CLI)
+export const API_BASE_URL = process.env.VUE_APP_API_URL || "http://localhost/finance-tracker/finance-backend";

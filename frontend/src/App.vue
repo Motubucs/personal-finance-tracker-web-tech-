@@ -32,6 +32,7 @@
 
 <script>
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 export default {
   name: 'App',
@@ -52,7 +53,7 @@ export default {
   },
   methods: {
     loadTransactions() {
-      axios.get('http://localhost/finance-tracker/finance-backend/api/transactions/get.php')
+      axios.get(`${API_BASE_URL}/api/transactions/get.php`)
         .then(response => {
           this.transactions = response.data;
         })
@@ -62,7 +63,7 @@ export default {
     },
     addTransaction() {
       console.log("🚀 Sending form:", this.form);
-      axios.post('http://localhost/finance-tracker/finance-backend/api/transactions/post.php', this.form, {
+      axios.post(`${API_BASE_URL}/api/transactions/post.php`, this.form, {
         headers: {
           'Content-Type': 'application/json'
         }
