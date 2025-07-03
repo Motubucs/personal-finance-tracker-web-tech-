@@ -1,7 +1,16 @@
 <?php
-header("Access-Control-Allow-Origin: https://personal-finance-tracker-web-tech-hkr06lvb1-motubucs-projects.vercel.app");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+$allowed_origins = [
+    "https://personal-finance-tracker-web-tech-hkr06lvb1-motubucs-projects.vercel.app",
+    "https://personal-finance-tracker-web-tech-91p0s6cj0-motubucs-projects.vercel.app",
+    // Add your production domain if you have one
+];
+if (isset($_SERVER['HTTP_ORIGIN']) && preg_match('/^https:\/\/personal-finance-tracker-web-tech-[a-z0-9]+-motubucs-projects\\.vercel\\.app$/', $_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+} elseif (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+}
 header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Credentials: true");
 
 // Handle preflight OPTIONS request
