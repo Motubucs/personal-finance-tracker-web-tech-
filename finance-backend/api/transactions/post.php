@@ -2,6 +2,7 @@
 $allowed_origins = [
     "https://personal-finance-tracker-web-tech-hkr06lvb1-motubucs-projects.vercel.app",
     "https://personal-finance-tracker-web-tech-91p0s6cj0-motubucs-projects.vercel.app",
+    "https://personal-finance-tracker-web-tech.vercel.app",
     // Add your production domain if you have one
 ];
 if (isset($_SERVER['HTTP_ORIGIN']) && preg_match('/^https:\/\/personal-finance-tracker-web-tech-[a-z0-9]+-motubucs-projects\\.vercel\\.app$/', $_SERVER['HTTP_ORIGIN'])) {

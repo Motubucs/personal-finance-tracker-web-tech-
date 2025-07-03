@@ -2,8 +2,8 @@
 $allowed_origins = [
     "https://personal-finance-tracker-web-tech-hkr06lvb1-motubucs-projects.vercel.app",
     "https://personal-finance-tracker-web-tech-91p0s6cj0-motubucs-projects.vercel.app",
-    // Add your production domain if you have one, e.g.:
-    // "https://personal-finance-tracker-web-tech.vercel.app"
+    "https://personal-finance-tracker-web-tech.vercel.app",
+    // Add your production domain if you have one
 ];
 
 // Allow all Vercel preview deployments:
