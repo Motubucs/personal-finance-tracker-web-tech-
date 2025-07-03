@@ -1,1 +1,1 @@
-export const API_BASE_URL = process.env.VUE_APP_API_URL || "http://localhost/finance-tracker/finance-backend"; 
+export const API_BASE_URL = process.env.VUE_APP_API_URL || "https://personal-finance-tracker-web-tech-hkr06lvb1-motubucs-projects.vercel.app"; 
