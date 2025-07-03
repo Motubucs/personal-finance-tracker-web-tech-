@@ -12,4 +12,4 @@ const API_CONFIG = {
 export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://personal-finance-tracker-web-tech.onrender.com";
 
 // For Vue 2 (Vue CLI)
-export const API_BASE_URL = process.env.VUE_APP_API_URL || "https://personal-finance-tracker-web-tech.onrender.com";
+export const API_BASE_RL = process.env.VUE_APP_API_URL || "https://personal-finance-tracker-web-tech.onrender.com";
